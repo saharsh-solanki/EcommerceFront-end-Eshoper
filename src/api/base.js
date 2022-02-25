@@ -73,8 +73,14 @@ export async function runApiBase(method, url, data, auth) {
       obj = error.response;
     });
 
-  var ResponseData = obj.data;
-  statusCode = obj.request.status;
+  if (obj) {
+    var ResponseData = obj.data;
+    statusCode = obj.request.status;
+  } else {
+    var ResponseData = {};
+    statusCode = 4000;
+  }
+
   return Response(responseStatus, ResponseData, statusCode);
 }
 

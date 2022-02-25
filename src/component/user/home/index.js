@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { SiteDetailsApi } from "../../../api/home/home";
+import { BaseToastContainar, ErrorToast } from "../../toast/base";
 import Footer from "./footer";
 import Header from "./header";
 
@@ -9,10 +10,9 @@ function Body() {
 
   React.useEffect(async () => {
     const response = await SiteDetailsApi();
-    console.log(
-      "🚀 ~ file: index.js ~ line 12 ~ React.useEffect ~ response",
-      response
-    );
+    if (response.statusCode === 4000) {
+      ErrorToast("Server down please try after some time ");
+    }
     const set = await setSiteDetail(response.data);
     console.log(siteDetail);
     // setSiteDetailApiLoader(false);
@@ -21,6 +21,7 @@ function Body() {
 
   return (
     <div>
+      <BaseToastContainar />
       <div className="container-fluid pt-5">
         <div className="row px-xl-5 pb-3">
           <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
