@@ -1,3 +1,5 @@
+import { ErrorToast } from "../component/toast/base";
+
 const axios = require("axios").default;
 const baseUrl = process.env.REACT_APP_BACKEND_API_URL;
 
@@ -38,7 +40,7 @@ export async function runApiBase(method, url, data, auth) {
            check if token available in data then run it token
             and add it to headers 
   */
-  var responseStatus = "";
+  var responseStatus = false;
   var ResponseData = "";
   var statusCode = "";
   var obj = "";
@@ -128,5 +130,8 @@ export async function runApi(method, url, data, auth = false) {
     data["token"] = GetAccessToken();
   }
   const Result = await runApiBase(method, url, data, auth);
+  if (Result.statusCode === 4000) {
+    ErrorToast("Server down please try after some time ");
+  }
   return Result;
 }

@@ -44,3 +44,21 @@ export const NamesForBreadCamp = {
   "/user/login": "Login  ",
   "/user/register": "Create an account",
 };
+
+export function GetConvertedImage(image) {
+  if (typeof image === "string") {
+    if (image.slice(0, 1) == "/")
+      return (
+        process.env.REACT_APP_BACKEND_API_URL + image.slice(1, image.length)
+      );
+    else {
+      return (
+        process.env.REACT_APP_BACKEND_API_URL +
+        "media/" +
+        image.slice(0, image.length)
+      );
+    }
+  } else {
+    return process.env.PUBLIC_URL + "img/cat-1.jpg";
+  }
+}
