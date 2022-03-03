@@ -1,7 +1,6 @@
 import { runApi } from "./base";
 
 export async function runGetApi(url, data, auth = false) {
-  console.log("working");
   const result = await runApi("get", url, data, auth);
   return result;
 }

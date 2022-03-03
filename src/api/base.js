@@ -59,7 +59,7 @@ export async function runApiBase(method, url, data, auth) {
     method: method,
     url: baseUrl + url,
     headers: header,
-    data: data,
+    params: data,
   };
 
   /* Make Api request */

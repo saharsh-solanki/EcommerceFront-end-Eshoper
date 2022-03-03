@@ -154,7 +154,6 @@ export default function Header(props) {
 
                 {data.top_category
                   ? data.top_category.map((category) => {
-                      console.log(category.sub_category.length);
                       if (category.sub_category.length === 0) {
                         return (
                           <a href="" class="nav-item nav-link">
