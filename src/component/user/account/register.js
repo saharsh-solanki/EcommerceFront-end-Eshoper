@@ -1,13 +1,60 @@
 import React from "react";
+import { CreateAccountApi } from "../../../api/auth/register";
 import PageHeader from "../../../utils/base";
+import {
+  BaseToastContainar,
+  ClearAllToast,
+  ErrorToast,
+  PendingToast,
+  successToast,
+  SuccessToast,
+  ToastToError,
+  ToastToSuccess,
+} from "../../toast/base";
 import Footer from "../home/footer";
 import Header from "../home/header";
 
 export default function Register() {
+  const [FromData, setFromData] = React.useState({ loader: false });
+
+  const HandleInputChange = (event) => {
+    setFromData({ ...FromData, [event.target.name]: event.target.value });
+  };
+
+  const handleFromSubmit = async () => {
+    if (
+      FromData.name &&
+      FromData.email &&
+      FromData.password &&
+      FromData.mobile_number
+    ) {
+      setFromData({ ...FromData, loader: true });
+      var pendingToasts = await PendingToast("Create Account ....");
+      const response = await CreateAccountApi({
+        ...FromData,
+      });
+      await ClearAllToast();
+      if (response.status) {
+        successToast("Account created Successfully..");
+        // ToastToSuccess(pendingToasts, "Account Created Successfully");
+      } else {
+        ToastToError(pendingToasts, "Error While Creating Your Account ");
+        var obj = Object.keys(response.data);
+        for (var key in Object.keys(response.data)) {
+          ErrorToast(obj[key] + " " + response.data[obj[key]][0]);
+        }
+      }
+      setFromData({ ...FromData, loader: false });
+    } else {
+      ErrorToast("Please fill all form field");
+    }
+  };
+
   return (
     <div>
       <Header></Header>
       <PageHeader></PageHeader>
+      {/* <BaseToastContainar></BaseToastContainar> */}
       <div class="container-fluid pt-5">
         <div class="text-center mb-4">
           <h2 class="section-title px-5">
@@ -30,6 +77,9 @@ export default function Register() {
                 Create your account within 1 minute
               </h5>
               <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                }}
                 name="sentMessage"
                 style={{ maxWidth: "400px" }}
                 id="contactForm"
@@ -39,10 +89,11 @@ export default function Register() {
                   <input
                     type="text"
                     class="form-control"
-                    id="name"
                     placeholder="Enter Your  Name"
                     required="required"
                     data-validation-required-message="Please enter your name"
+                    name="name"
+                    onChange={HandleInputChange}
                   />
                   <p class="help-block text-danger"></p>
                 </div>
@@ -54,6 +105,22 @@ export default function Register() {
                     placeholder="Your Email"
                     required="required"
                     data-validation-required-message="Please enter your email"
+                    name="email"
+                    onChange={HandleInputChange}
+                  />
+                  <p class="help-block text-danger"></p>
+                </div>
+                <div class="control-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter Your  Name"
+                    required="required"
+                    min={611111111}
+                    max={9999999999}
+                    data-validation-required-message="Please enter your number"
+                    name="mobile_number"
+                    onChange={HandleInputChange}
                   />
                   <p class="help-block text-danger"></p>
                 </div>
@@ -64,6 +131,8 @@ export default function Register() {
                     id="subject"
                     placeholder="Your Password"
                     required="required"
+                    name="password"
+                    onChange={HandleInputChange}
                   />
                   <p class="help-block text-danger"></p>
                 </div>
@@ -73,8 +142,16 @@ export default function Register() {
                     class="btn btn-primary py-2 px-4"
                     type="submit"
                     id="sendMessageButton"
+                    onClick={handleFromSubmit}
+                    disabled={FormData.loader}
                   >
-                    Create an Account <i className="fa fa-arrow"></i>
+                    {FormData.loader ? (
+                      "Creating Your Account ..."
+                    ) : (
+                      <>
+                        Create an Account <i className="fa fa-arrow"></i>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

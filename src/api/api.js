@@ -14,3 +14,8 @@ export async function runDeleteApi(url, data, auth = false) {
   const result = await runApi("delete", url, data, auth);
   return result;
 }
+
+export async function runPatchApi(url, data, auth = false) {
+  const result = await runApi("patch", url, data, auth);
+  return result;
+}

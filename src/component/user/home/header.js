@@ -2,12 +2,25 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+import { UpdateCartApi } from "../../../api/account/cart/cart";
+import { FetchAndUpdateUserProfileApi } from "../../../api/account/profile/profile";
+import { GetAccessToken } from "../../../api/base";
 import { SiteDetailsApi } from "../../../api/home/home";
 import { rootAction } from "../../../redux/actions";
-import { GetConvertedImage } from "../../../utils/base";
+import { GetAuthDetail, GetConvertedImage } from "../../../utils/base";
 import { BaseToastContainar } from "../../toast/base";
 
 function TopBar() {
+  const cartdata = useSelector((state) => {
+    return state.CartReducer.cartdata;
+  });
+  console.log("🚀 ~ file: header.js ~ line 17 ~ cartdata ~ cartdata", cartdata);
+  const [ProductSearchState, setproductsearchState] = React.useState("");
+  const handleStateChange = (event) => {
+    setproductsearchState(event.target.value);
+  };
+  var isAuth = GetAuthDetail();
+
   return (
     <div class="container-fluid">
       <BaseToastContainar />
@@ -59,29 +72,36 @@ function TopBar() {
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form action="">
+          <form>
             <div class="input-group">
               <input
                 type="text"
                 class="form-control"
                 placeholder="Search for products"
+                value={ProductSearchState}
+                onChange={handleStateChange}
               />
               <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
+                <Link
+                  to={"/shop?search=" + ProductSearchState}
+                  class="input-group-text bg-transparent text-primary"
+                >
                   <i class="fa fa-search"></i>
-                </span>
+                </Link>
               </div>
             </div>
           </form>
         </div>
-        <div class="col-lg-3 col-6 text-right">
+        <div class="col-lg-3 col-6 text-right ">
           <Link to={"/user/favorite"} class="btn border">
             <i class="fas fa-heart text-primary"></i>
             <span class="badge">0</span>
           </Link>
-          <Link to={"/user/cart"} class="btn border">
+          <Link to={"/user/cart"} class="btn border target-class-cart">
             <i class="fas fa-shopping-cart text-primary"></i>
-            <span class="badge">0</span>
+            <span class="badge">
+              {cartdata.data ? cartdata.data.length : 0}
+            </span>
           </Link>
         </div>
       </div>
@@ -93,8 +113,21 @@ export default function Header(props) {
   const data = useSelector((state) => {
     return state.HomePageReducer.data;
   });
+  const cartdata = useSelector((state) => {
+    return state.CartReducer.cartdata;
+  });
 
+  const data1 = useSelector((state) => {
+    return state.AccountReducer.data;
+  });
+  var isAuth = GetAuthDetail();
   const dispatch = useDispatch();
+
+  React.useEffect(async () => {
+    if (isAuth) {
+      const response = await UpdateCartApi(dispatch);
+    }
+  }, []);
 
   React.useEffect(async () => {
     const response = await SiteDetailsApi();
@@ -106,6 +139,14 @@ export default function Header(props) {
       });
     }
   }, []);
+
+  React.useEffect(async () => {
+    const access = GetAccessToken();
+    if (access) {
+      const fetchprofile = await FetchAndUpdateUserProfileApi(dispatch);
+    }
+  }, []);
+  const access = GetAccessToken();
 
   return (
     <div>
@@ -156,9 +197,12 @@ export default function Header(props) {
                   ? data.top_category.map((category) => {
                       if (category.sub_category.length === 0) {
                         return (
-                          <a href="" class="nav-item nav-link">
+                          <Link
+                            to={"/shop?category=" + category.id}
+                            class="nav-item nav-link"
+                          >
                             {category.category}
-                          </a>
+                          </Link>
                         );
                       } else {
                         return (
@@ -172,9 +216,12 @@ export default function Header(props) {
                               <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                 {category.sub_category.map((subcat) => {
                                   return (
-                                    <a href="" class="dropdown-item">
+                                    <Link
+                                      to={"/shop?category=" + subcat.id}
+                                      class="dropdown-item"
+                                    >
                                       {subcat.category}
-                                    </a>
+                                    </Link>
                                   );
                                 })}
                               </div>
@@ -250,18 +297,34 @@ export default function Header(props) {
                     Contact
                   </NavLink>
                 </div>
-                <div class="navbar-nav ml-auto py-0">
-                  <NavLink
-                    ativeClassName="active"
-                    to="/user/login"
-                    className="nav-item nav-link"
-                  >
-                    Login
-                  </NavLink>
-                  <NavLink to={"/user/register"} className="nav-item nav-link">
-                    Register
-                  </NavLink>
-                </div>
+
+                {access ? (
+                  <div class="navbar-nav ml-auto py-0">
+                    <Link to={"/user"}>
+                      <img
+                        src={data1.profile_image}
+                        alt="Profile"
+                        style={{ height: "40px", borderRadius: "150px" }}
+                      ></img>
+                    </Link>
+                  </div>
+                ) : (
+                  <div class="navbar-nav ml-auto py-0">
+                    <NavLink
+                      ativeClassName="active"
+                      to="/user/login"
+                      className="nav-item nav-link"
+                    >
+                      Login
+                    </NavLink>
+                    <NavLink
+                      to={"/user/register"}
+                      className="nav-item nav-link"
+                    >
+                      Register
+                    </NavLink>
+                  </div>
+                )}
               </div>
             </nav>
             {window.location.pathname === "/" ? (

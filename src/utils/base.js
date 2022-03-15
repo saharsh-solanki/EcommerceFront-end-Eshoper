@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { GetAccessToken, GetRefreshToken } from "../api/base";
 
 export default function PageHeader() {
   let url = window.location.pathname;
@@ -60,5 +61,20 @@ export function GetConvertedImage(image) {
     }
   } else {
     return process.env.PUBLIC_URL + "img/cat-1.jpg";
+  }
+}
+
+export function useQuery() {
+  const { search } = useLocation();
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+export function GetAuthDetail() {
+  const token = GetAccessToken();
+  const refresh = GetRefreshToken();
+  if (token && refresh) {
+    return true;
+  } else {
+    return false;
   }
 }

@@ -27,11 +27,25 @@ export function ToastToError(Pendingtoast, messgae) {
     closeButton: true,
     newestOnTop: true,
     autoClose: 3000,
+    limit: 1,
   });
 }
 
 export function ErrorToast(messgae) {
   toast.error(messgae, {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+}
+
+export function successToast(messgae) {
+  toast.success(messgae, {
     position: "top-right",
     autoClose: 3000,
     hideProgressBar: false,
@@ -70,4 +84,8 @@ export function BaseToastContainar() {
       pauseOnHover
     />
   );
+}
+
+export function ClearAllToast() {
+  toast.dismiss();
 }

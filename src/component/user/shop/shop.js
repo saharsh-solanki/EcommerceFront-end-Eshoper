@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
-import PageHeader from "../../../utils/base";
+import PageHeader, { useQuery } from "../../../utils/base";
 import Header from "../home/header";
 import Footer from "../home/footer";
 import { useSelector } from "react-redux";
 import { ProductApi } from "../../../api/shop/shop";
 import { SingleProduct } from "./singleProduct";
 export default function Shop() {
+  const queryParams = useQuery();
+  const search = queryParams.get("search") ? queryParams.get("search") : "";
+  const category = queryParams.get("category")
+    ? queryParams.get("category")
+    : "";
+
   const data = useSelector((state) => {
     return state.HomePageReducer.data;
   });
@@ -15,12 +21,16 @@ export default function Shop() {
       ColorFilterCheckbox: [],
       SizeFilterCheckbox: [],
       page: null,
+      ordering: null,
+      search: search,
+      minPrice: null,
+      maxPrice: null,
+      category: category,
     },
   });
   const [productDataState, setproductDataState] = React.useState([]);
   const [paginationData, SetpaginationData] = React.useState({});
   const [currentPage, SetcurrentPage] = React.useState(0);
-  console.log(filterState);
   const handleStateChangePrice = (event) => {
     var targetname = event.target.name;
     if (event.target.checked) {
@@ -90,10 +100,67 @@ export default function Shop() {
       });
     }
   };
+  const handleStateChangePirceRange = (event) => {
+    var targetname = event.target.name;
+    var value = event.target.value;
+    if (value) {
+      setfilterState({
+        filters: {
+          ...filterState.filters,
+          [targetname]: value,
+        },
+      });
+    } else {
+      setfilterState({
+        filters: {
+          ...filterState.filters,
+          [targetname]: null,
+        },
+      });
+    }
+  };
+  const handleStateChangeOrdering = (event) => {
+    const Target = event.target.attributes.filterBy.value;
+    if (Target) {
+      if (Target) {
+        setfilterState({
+          filters: {
+            ...filterState.filters,
+            ordering: Target,
+          },
+        });
+      }
+    }
+  };
 
-  const handlePageNumberChange = () => {};
+  const handleStateChangeSearch = (event) => {
+    const Target = event.target.value;
 
+    setfilterState({
+      filters: {
+        ...filterState.filters,
+        search: Target,
+      },
+    });
+  };
   // handle change
+  useEffect(() => {
+    setfilterState({
+      filters: {
+        ...filterState.filters,
+        search: search,
+      },
+    });
+  }, [search]);
+
+  useEffect(() => {
+    setfilterState({
+      filters: {
+        ...filterState.filters,
+        category: category,
+      },
+    });
+  }, [category]);
 
   useEffect(async () => {
     const data = await changeProductByStates();
@@ -124,12 +191,31 @@ export default function Shop() {
     var price = filterState.filters.priceFilterCheckbox;
     var size = filterState.filters.SizeFilterCheckbox;
     var color = filterState.filters.ColorFilterCheckbox;
+    var ordering = filterState.filters.ordering;
+    var search = filterState.filters.search;
+    var category = filterState.filters.category;
+    var min = filterState.filters.minPrice;
+    var max = filterState.filters.maxPrice;
     if (color.length !== 0) {
       data["colors"] = color;
     }
     if (size.length !== 0) {
       data["sizes"] = size;
     }
+    if (ordering) {
+      data["ordering"] = ordering;
+    }
+    if (search) {
+      data["search"] = search;
+    }
+    if (category) {
+      data["category"] = [category];
+    }
+    if (min && max) {
+      data["minPrice"] = min;
+      data["maxPrice"] = max;
+    }
+
     return data;
   };
 
@@ -159,15 +245,35 @@ export default function Shop() {
                 </div>
                 <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
+                    name="minPrice"
+                    class="form-control"
+                    type={"text"}
+                    placeholder={"0 Rs"}
+                    value={filterState.filters.minPrice}
+                    onChange={handleStateChangePirceRange}
+                  />
+                  <input
+                    name="maxPrice"
+                    class="form-control"
+                    type={"text"}
+                    value={filterState.filters.maxPrice}
+                    placeholder={"100000 Rs"}
+                    onChange={handleStateChangePirceRange}
+                  />
+                </div>
+                {/* <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                  <input
                     name="priceFilterCheckbox"
                     type="checkbox"
                     class="custom-control-input"
                     id="price-1"
-                    onClick={handleStateChangePrice}
                     value={"0-100"}
+                    min={"0"}
+                    max={"100"}
+                    onClick={handleStateChangePirceRange}
                   />
                   <label class="custom-control-label" for="price-1">
-                    $0 - $100
+                    Rs. 0 - $100
                   </label>
                   <span class="badge border font-weight-normal">150</span>
                 </div>
@@ -177,19 +283,25 @@ export default function Shop() {
                     class="custom-control-input"
                     id="price-2"
                     name="priceFilterCheckbox"
-                    onClick={handleStateChangePrice}
                     value={"100-200"}
+                    min={"100"}
+                    max={"200"}
+                    onClick={handleStateChangePirceRange}
                   />
                   <label class="custom-control-label" for="price-2">
-                    $100 - $200
+                    RS . 100 - $200
                   </label>
                   <span class="badge border font-weight-normal">295</span>
                 </div>
                 <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
-                    type="checkbox"
+                    // type="checkbox"
                     class="custom-control-input"
                     id="price-3"
+                    value={"200-300"}
+                    min={"200"}
+                    max={"300"}
+                    onClick={handleStateChangePirceRange}
                   />
                   <label class="custom-control-label" for="price-3">
                     $200 - $300
@@ -217,7 +329,7 @@ export default function Shop() {
                     $400 - $500
                   </label>
                   <span class="badge border font-weight-normal">168</span>
-                </div>
+                </div> */}
               </form>
             </div>
             {/* <!-- Price End --> */}
@@ -316,6 +428,8 @@ export default function Shop() {
                   <form action="">
                     <div class="input-group">
                       <input
+                        onChange={handleStateChangeSearch}
+                        value={filterState.filters.search}
                         type="text"
                         class="form-control"
                         placeholder="Search by name"
@@ -342,15 +456,35 @@ export default function Shop() {
                       class="dropdown-menu dropdown-menu-right"
                       aria-labelledby="triggerId"
                     >
-                      <a class="dropdown-item" href="#">
+                      <button
+                        value={"Latest"}
+                        filterBy="id"
+                        class="dropdown-item"
+                        onClick={handleStateChangeOrdering}
+                      >
                         Latest
-                      </a>
-                      <a class="dropdown-item" href="#">
-                        Popularity
-                      </a>
-                      <a class="dropdown-item" href="#">
-                        Best Rating
-                      </a>
+                      </button>
+                      <butto
+                        onClick={handleStateChangeOrdering}
+                        class="dropdown-item"
+                        filterBy="-id"
+                      >
+                        Oldest
+                      </butto>
+                      <button
+                        onClick={handleStateChangeOrdering}
+                        class="dropdown-item"
+                        filterBy="price"
+                      >
+                        Low To High
+                      </button>
+                      <button
+                        onClick={handleStateChangeOrdering}
+                        class="dropdown-item"
+                        filterBy="-price"
+                      >
+                        High To Low
+                      </button>
                     </div>
                   </div>
                 </div>
