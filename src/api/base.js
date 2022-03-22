@@ -53,14 +53,26 @@ export async function runApiBase(method, url, data, auth) {
     // deleting token object from object
     delete data.token;
   }
+  if (data.token1) {
+    /* Checking if token is avaiable in data or not */
+    data["token"] = data.token1;
+    // deleting token object from object
+    delete data.token1;
+  }
 
   /* Configuarations for runnning API */
   var config = {
     method: method,
     url: baseUrl + url,
     headers: header,
-    data: data,
+    // params: data,
   };
+
+  if (method === "get") {
+    config["params"] = data;
+  } else {
+    config["data"] = data;
+  }
 
   /* Make Api request */
   const response = await axios(config)
@@ -89,7 +101,7 @@ export async function runApiBase(method, url, data, auth) {
 async function UpdateAccessToken() {
   /* Update the  accessd token from refresh token */
   var token = GetRefreshToken();
-  const GetToken = await runApiBase("get", "api/token/refresh/", {
+  const GetToken = await runApiBase("post", "api/token/refresh/", {
     refresh: token,
   });
   if (GetToken.statusCode === 401) {
@@ -107,8 +119,8 @@ async function checkAndUpdateAccessToken() {
   and if the refresh token is already expired then it prefrom logout 
   */
   var token = GetAccessToken();
-  const CheckToken = await runApiBase("get", "api/token/verify/", {
-    token: token,
+  const CheckToken = await runApiBase("post", "api/token/verify/", {
+    token1: token,
   });
   if (CheckToken.statusCode == 401) {
     const UpdateToken = await UpdateAccessToken();
