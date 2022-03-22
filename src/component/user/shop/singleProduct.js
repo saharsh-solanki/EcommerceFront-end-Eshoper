@@ -6,7 +6,7 @@ import $ from "jquery";
 import { ErrorToast } from "../../toast/base";
 import { useQuery } from "../../../utils/base";
 // import  "../../../../public/fly/lib/fly.min.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function rocketcss(t, o, e) {
   var a = $(t).clone(),
     i = $(o).offset(),
@@ -86,10 +86,10 @@ export function SingleProduct(props) {
           </div>
         </div>
         <div className="card-footer d-flex justify-content-between bg-light border">
-          <a href className="btn btn-sm text-dark p-0">
+          <Link to={"/shop/" + product.id} className="btn btn-sm text-dark p-0">
             <i className="fas fa-eye text-primary mr-1" />
             View Detail
-          </a>
+          </Link>
           <button
             onClick={(event) => {
               if (isAuth) {
@@ -117,7 +117,7 @@ export function SingleProduct(props) {
                 window.scroll(0, 600);
               }
             }}
-            className="btn btn-sm text-dark p-0 ButtonForCart"
+            className="btn btn text-dark p-0 ButtonForCart"
           >
             <i className="fas fa-shopping-cart text-primary mr-1" />
             Add To Cart

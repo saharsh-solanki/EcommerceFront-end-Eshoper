@@ -5,13 +5,18 @@ import Footer from "../home/footer";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DeletePorductFromCartApi,
+  ProccedToCheckoutApi,
   UpdatePorductQuantityInCartApi,
 } from "../../../api/shop/cart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { BaseToastContainar, ErrorToast } from "../../toast/base";
 export default function Cart() {
   const cartdata = useSelector((state) => {
     return state.CartReducer.cartdata;
   });
+
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const updateQuantity = async (productId, qyt) => {
@@ -21,6 +26,32 @@ export default function Cart() {
       const res = await UpdatePorductQuantityInCartApi(data, dispatch);
     }
   };
+
+  const ValidateCart = async () => {
+    const check = await ProccedToCheckoutApi();
+    if (check.status) {
+      return navigate("/user/cart/checkout");
+    } else {
+      ErrorToast(check.data["details"]);
+    }
+  };
+
+  const updateExtraDetail = async (event) => {
+    var pid = event.target.attributes.productId.value;
+    var index = event.target.attributes.index.value;
+    var extra = cartdata.data[index].extra_info;
+    console.log(
+      "🚀 ~ file: cart.js ~ line 43 ~ updateExtraDetail ~ extra",
+      extra
+    );
+    var data = {
+      product: pid,
+      extra_info: { ...extra, [event.target.name]: event.target.value },
+    };
+    console.log(data);
+    const res = await UpdatePorductQuantityInCartApi(data, dispatch);
+  };
+
   const deletProductFromCart = async (productId) => {
     const res = await DeletePorductFromCartApi(productId, dispatch);
   };
@@ -28,6 +59,7 @@ export default function Cart() {
     <div>
       <Header></Header>
       <PageHeader></PageHeader>
+      <BaseToastContainar></BaseToastContainar>
       <div class="container-fluid pt-5">
         <div class="row px-xl-5">
           <div class="col-lg-8 table-responsive mb-5">
@@ -37,6 +69,8 @@ export default function Cart() {
                   <th>Products</th>
                   <th>Price</th>
                   <th>Quantity</th>
+                  <th>Size</th>
+                  <th>Color</th>
                   <th>Total</th>
                   <th>Remove</th>
                 </tr>
@@ -44,7 +78,7 @@ export default function Cart() {
               <tbody class="align-middle">
                 {cartdata.data ? (
                   cartdata.data.length > 0 ? (
-                    cartdata.data.map((cart) => {
+                    cartdata.data.map((cart, index) => {
                       return (
                         <tr>
                           <td class="align-middle">
@@ -103,6 +137,76 @@ export default function Cart() {
                                 </button>
                               </div>
                             </div>
+                          </td>
+                          <td class="align-middle">
+                            <select
+                              index={index}
+                              productId={cart.product.id}
+                              onChange={updateExtraDetail}
+                              style={{ minWidth: "80px" }}
+                              className="form-control"
+                              name="size"
+                            >
+                              <option
+                                selected={cart.extra_info.size ? false : true}
+                                disabled={true}
+                              >
+                                Size
+                              </option>
+                              {cart.product.size
+                                ? cart.product.size.map((sizes) => {
+                                    return (
+                                      <option
+                                        selected={
+                                          cart.extra_info.size
+                                            ? cart.extra_info.size === sizes
+                                              ? true
+                                              : false
+                                            : false
+                                        }
+                                        value={sizes}
+                                      >
+                                        {sizes}
+                                      </option>
+                                    );
+                                  })
+                                : ""}
+                            </select>
+                          </td>
+                          <td class="align-middle">
+                            <select
+                              index={index}
+                              productId={cart.product.id}
+                              onChange={updateExtraDetail}
+                              style={{ minWidth: "80px" }}
+                              className="form-control"
+                              name="color"
+                            >
+                              <option
+                                selected={cart.extra_info.color ? false : true}
+                                disabled={true}
+                              >
+                                Color
+                              </option>
+                              {cart.product.color
+                                ? cart.product.color.map((colors) => {
+                                    return (
+                                      <option
+                                        selected={
+                                          cart.extra_info.color
+                                            ? cart.extra_info.color === colors
+                                              ? true
+                                              : false
+                                            : false
+                                        }
+                                        value={colors}
+                                      >
+                                        {colors}
+                                      </option>
+                                    );
+                                  })
+                                : ""}
+                            </select>
                           </td>
                           <td class="align-middle">
                             Rs.{cart.product_detail.totalPrice}
@@ -357,12 +461,13 @@ export default function Cart() {
                           Rs. {cartdata.totalProductPrice}
                         </h5>
                       </div>
-                      <Link
-                        to={"/user/cart/checkout"}
+                      <button
+                        // to={"/user/cart/checkout"}
+                        onClick={ValidateCart}
                         class="btn btn-block btn-primary my-3 py-3"
                       >
                         Proceed To Checkout
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 ) : (

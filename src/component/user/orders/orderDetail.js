@@ -17,10 +17,6 @@ import Header from "../home/header";
 
 export default function OrderDetail() {
   const [orderData, setorderData] = React.useState(null);
-  console.log(
-    "🚀 ~ file: orderDetail.js ~ line 20 ~ OrderDetail ~ orderData",
-    orderData
-  );
   let { id } = useParams();
   useEffect(async () => {
     const response = await OrderDetailApi(id);
@@ -88,38 +84,59 @@ export default function OrderDetail() {
                   </div>
                 </div>
               </div>
-              <div classname="col-lg-6" style={{ margin: "auto" }}>
+              <div classname="col-lg-6">
                 <div className="card border-secondary mb-5">
-                  <div classname="card-body ">
+                  <div
+                    classname="card-body "
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      overflowX: "auto",
+                    }}
+                  >
                     <table className="table table-bordered text-center mb-0">
                       <thead className="bg-secondary text-dark">
                         <tr>
                           <th>Product Name </th>
                           <th>Amount</th>
-                          <th>Status</th>
+                          <th>Extra Info</th>
+                          <th>Quantity</th>
                         </tr>
                       </thead>
                       <tbody className="align-middle">
-                        {orderData.products.map((product) => {
+                        {orderData.cartdata.map((cart) => {
                           return (
                             <tr>
                               <td className="align-middle">
                                 <img
                                   src={
-                                    product.images.image.image
+                                    cart.product.images.image.image
                                       ? GetConvertedImage(
-                                          product.images.image.image
+                                          cart.product.images.image.image
                                         )
                                       : "img/product-1.jpg"
                                   }
                                   style={{ height: "50px" }}
                                 ></img>{" "}
                                 &nbsp;
-                                <span>{product.product_name}</span>
+                                <span>{cart.product.product_name}</span>
                               </td>
                               <td className="align-middle">
-                                Rs. {product.price}{" "}
+                                Rs. {cart.product.price}{" "}
                               </td>
+                              <td>
+                                {cart.extra_info
+                                  ? Object.keys(cart.extra_info).map((key) => {
+                                      return (
+                                        <span>
+                                          {key} : {cart.extra_info[key]}
+                                          <br></br>
+                                        </span>
+                                      );
+                                    })
+                                  : ""}
+                              </td>
+                              <td>*{cart.quantity ? cart.quantity : ""}</td>
                             </tr>
                           );
                         })}

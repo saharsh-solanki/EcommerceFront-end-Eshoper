@@ -5,3 +5,9 @@ export async function ProductApi(data) {
   const result = await runGetApi(apiUrl, data);
   return result;
 }
+
+export async function SingleProductApi(pid) {
+  var apiUrl = "api/products/" + pid;
+  const result = await runGetApi(apiUrl, {});
+  return result;
+}
