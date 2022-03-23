@@ -241,7 +241,14 @@ export default function ProductDetail() {
               <div class="d-flex pt-2">
                 <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
                 <div class="d-inline-flex">
-                  <a class="text-dark px-2" href="">
+                  <a
+                    class="text-dark px-2"
+                    href={
+                      "whatsapp://send?text=Hey Its any Amazing Product " +
+                      "http://localhost:3000/shop/" +
+                      productData.id
+                    }
+                  >
                     <i class="fab fa-facebook-f"></i>
                   </a>
                   <a class="text-dark px-2" href="">

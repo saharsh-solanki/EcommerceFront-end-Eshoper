@@ -5,20 +5,32 @@ import { Link, NavLink } from "react-router-dom";
 import { UpdateCartApi } from "../../../api/account/cart/cart";
 import { FetchAndUpdateUserProfileApi } from "../../../api/account/profile/profile";
 import { GetAccessToken } from "../../../api/base";
+import { UpdateFavoriteApi } from "../../../api/favorite/favorite";
 import { SiteDetailsApi } from "../../../api/home/home";
 import { rootAction } from "../../../redux/actions";
 import { GetAuthDetail, GetConvertedImage } from "../../../utils/base";
 import { BaseToastContainar } from "../../toast/base";
 
 function TopBar() {
+  // Get FavoriteData From Reducer
+  const favoriteData = useSelector((state) => {
+    return state.FavoriteReducer.favoriteData;
+  });
+  console.log(
+    "🚀 ~ file: header.js ~ line 19 ~ favoriteData ~ favoriteData",
+    favoriteData
+  );
+
   const cartdata = useSelector((state) => {
     return state.CartReducer.cartdata;
   });
-  console.log("🚀 ~ file: header.js ~ line 17 ~ cartdata ~ cartdata", cartdata);
+
   const [ProductSearchState, setproductsearchState] = React.useState("");
+
   const handleStateChange = (event) => {
     setproductsearchState(event.target.value);
   };
+
   var isAuth = GetAuthDetail();
 
   return (
@@ -72,7 +84,11 @@ function TopBar() {
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
             <div class="input-group">
               <input
                 type="text"
@@ -95,7 +111,7 @@ function TopBar() {
         <div class="col-lg-3 col-6 text-right ">
           <Link to={"/user/favorite"} class="btn border">
             <i class="fas fa-heart text-primary"></i>
-            <span class="badge">0</span>
+            <span class="badge">{favoriteData ? favoriteData.length : 0}</span>
           </Link>
           <Link to={"/user/cart"} class="btn border target-class-cart">
             <i class="fas fa-shopping-cart text-primary"></i>
@@ -110,9 +126,15 @@ function TopBar() {
 }
 
 export default function Header(props) {
+  // Get FavoriteData From Reducer
+  const favoriteData = useSelector((state) => {
+    return state.FavoriteReducer.favoriteData;
+  });
+
   const data = useSelector((state) => {
     return state.HomePageReducer.data;
   });
+
   const cartdata = useSelector((state) => {
     return state.CartReducer.cartdata;
   });
@@ -126,6 +148,7 @@ export default function Header(props) {
   React.useEffect(async () => {
     if (isAuth) {
       const response = await UpdateCartApi(dispatch);
+      const responseFav = await UpdateFavoriteApi(dispatch);
     }
   }, []);
 

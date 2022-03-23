@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AddProductToCartApi } from "../../../api/shop/cart";
 import { GetAuthDetail, GetConvertedImage } from "../../../utils/base";
 import $ from "jquery";
@@ -7,6 +7,10 @@ import { ErrorToast } from "../../toast/base";
 import { useQuery } from "../../../utils/base";
 // import  "../../../../public/fly/lib/fly.min.js";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  AddProductToFavoriteApi,
+  DeletePorductFromFavoriteApi,
+} from "../../../api/favorite/favorite";
 function rocketcss(t, o, e) {
   var a = $(t).clone(),
     i = $(o).offset(),
@@ -52,15 +56,99 @@ function rocketcss(t, o, e) {
 }
 
 export function SingleProduct(props) {
+  // Get CartData From Reducer
+  const favoriteData = useSelector((state) => {
+    return state.FavoriteReducer.favoriteData;
+  });
+
+  // convert a favorite product list in the list of product id so we can check
+  const getFavoriteProduct = () => {
+    var prod = [];
+    favoriteData.map((prods) => {
+      prod.push(prods.product_detail.id);
+    });
+    return prod;
+  };
+
+  // calling the function
+  const FavoriteProduct = getFavoriteProduct();
+
   const dispatch = useDispatch();
   const product = props.product;
+
   var isAuth = GetAuthDetail();
   const navigate = useNavigate();
 
   // const history = useHistor();
 
   return (
-    <div className="col-lg-4 col-md-6 col-sm-12 pb-1">
+    <div className={"pb-1 " + (props.colclass ? props.colclass : "col-lg-4")}>
+      {isAuth ? (
+        props.fav ? (
+          <i
+            className={
+              "fa fa-trash text-danger " +
+              (FavoriteProduct.includes(product.id) ? "text-primary" : "")
+            }
+            style={{
+              border: "",
+              top: "7.8%",
+              left: "88%",
+              position: "relative",
+              zIndex: "999",
+              fontSize: "22px",
+              cursor: "pointer",
+            }}
+            onClick={(event) => {
+              if (isAuth) {
+                if (FavoriteProduct.includes(product.id)) {
+                  // $(event.target).removeClass("text-primary");
+                  DeletePorductFromFavoriteApi(product.id, dispatch);
+                } else {
+                  // $(event.target).addClass("text-primary");
+                  AddProductToFavoriteApi(product.id, dispatch);
+                }
+              } else {
+                navigate("/user/login");
+              }
+            }}
+            aria-hidden="true"
+          ></i>
+        ) : (
+          <i
+            className={
+              "fas fa-heart " +
+              (FavoriteProduct.includes(product.id) ? "text-primary" : "")
+            }
+            style={{
+              border: "",
+              top: "7.8%",
+              left: "88%",
+              position: "relative",
+              zIndex: "999",
+              fontSize: "22px",
+              cursor: "pointer",
+            }}
+            onClick={(event) => {
+              if (isAuth) {
+                if (FavoriteProduct.includes(product.id)) {
+                  $(event.target).removeClass("text-primary");
+                  DeletePorductFromFavoriteApi(product.id, dispatch);
+                } else {
+                  $(event.target).addClass("text-primary");
+                  AddProductToFavoriteApi(product.id, dispatch);
+                }
+              } else {
+                navigate("/user/login");
+              }
+            }}
+            aria-hidden="true"
+          ></i>
+        )
+      ) : (
+        ""
+      )}
+
       <div
         className="card product-item border-0 mb-4"
         style={{ maxHeight: "400px" }}

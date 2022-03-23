@@ -40,10 +40,7 @@ export default function Cart() {
     var pid = event.target.attributes.productId.value;
     var index = event.target.attributes.index.value;
     var extra = cartdata.data[index].extra_info;
-    console.log(
-      "🚀 ~ file: cart.js ~ line 43 ~ updateExtraDetail ~ extra",
-      extra
-    );
+
     var data = {
       product: pid,
       extra_info: { ...extra, [event.target.name]: event.target.value },
@@ -216,19 +213,7 @@ export default function Cart() {
                               onClick={(event) => {
                                 event.target.style.transition =
                                   "opacity 2000ms;";
-                                // const id = event.currentTarget.value;
-                                // const container =
-                                //   event.currentTarget.closest("tr");
-                                // container.style.transition = "all 0.5s";
-                                // container.style.opacity = "0";
-                                // setTimeout(function () {
-                                //   setDataset((prevDataset) =>
-                                //     prevDataset.filter(
-                                //       (item) => item.id !== parseInt(id)
-                                //     )
-                                //   );
-                                //   localStorage.removeItem(id);
-                                // }, 700);
+
                                 deletProductFromCart(cart.product_detail.id);
                               }}
                               class="btn btn-sm btn-primary"
@@ -260,163 +245,6 @@ export default function Cart() {
                 ) : (
                   ""
                 )}
-
-                {/* <tr>
-                  <td class="align-middle">
-                    <img
-                      src="img/product-2.jpg"
-                      alt=""
-                      style={{ width: " 50px" }}
-                    />
-                    Colorful Stylish Shirt
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <div
-                      class="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-minus">
-                          <i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm bg-secondary text-center"
-                        value="1"
-                      />
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-plus">
-                          <i class="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    <img
-                      src="img/product-3.jpg"
-                      alt=""
-                      style={{ width: "50px" }}
-                    />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <div
-                      class="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-minus">
-                          <i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm bg-secondary text-center"
-                        value="1"
-                      />
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-plus">
-                          <i class="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    <img
-                      src="img/product-4.jpg"
-                      alt=""
-                      style={{ width: "50px" }}
-                    />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <div
-                      class="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-minus">
-                          <i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm bg-secondary text-center"
-                        value="1"
-                      />
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-plus">
-                          <i class="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    <img
-                      src="img/product-5.jpg"
-                      alt=""
-                      style={{ width: "50px" }}
-                    />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <div
-                      class="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-minus">
-                          <i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm bg-secondary text-center"
-                        value="1"
-                      />
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-primary btn-plus">
-                          <i class="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="align-middle">$150</td>
-                  <td class="align-middle">
-                    <button class="btn btn-sm btn-primary">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr> */}
               </tbody>
             </table>
           </div>

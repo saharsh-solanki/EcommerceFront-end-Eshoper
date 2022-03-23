@@ -16,7 +16,35 @@ body {
 .user-card-full {
   overflow: hidden;
 }
-
+.profile-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 1;
+  /* background-color: #00000043; */
+}
+.profile-img-main::after {
+  background-color: #00000043;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  content: "";
+  border-radius: 50%;
+  position: absolute;
+  /* z-index: 1; */
+  opacity: 0;
+}
+.profile-img i {
+  color: #fff;
+  font-size: 20px;
+}
+.profile-img-main:hover::after,
+.profile-img-main:hover .profile-img {
+  opacity: 1;
+}
 .card {
   border-radius: 5px;
   -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);

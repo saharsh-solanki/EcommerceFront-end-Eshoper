@@ -24,3 +24,16 @@ export async function UpdateProfileApi(data, dispatch) {
   const up = await FetchAndUpdateUserProfileApi(dispatch);
   return response;
 }
+
+export async function UploadProfilePicture(file, dispatch) {
+  var FormData = require("form-data");
+  var formData = new FormData();
+  formData.append("profile_image", file);
+  const response = await runPatchApi(
+    "api/user/upload_profile_image/",
+    formData,
+    true
+  );
+  FetchAndUpdateUserProfileApi(dispatch);
+  return response;
+}
