@@ -35,7 +35,6 @@ export default function Profile() {
 
   const handleFromSubmit = async () => {
     setFromData({ ...FromData, loader: true });
-    // var pendingToasts = await PendingToast("Updating  ....");
     const response = await UpdateProfileApi(
       {
         ...FromData,
