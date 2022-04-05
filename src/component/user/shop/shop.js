@@ -435,9 +435,9 @@ export default function Shop() {
                         placeholder="Search by name"
                       />
                       <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
+                        <a class="input-group-text bg-transparent text-primary">
                           <i class="fa fa-search"></i>
-                        </span>
+                        </a>
                       </div>
                     </div>
                   </form>

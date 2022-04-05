@@ -1,4 +1,5 @@
 import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
 import {
   BrowserRouter,
@@ -25,6 +26,13 @@ import Checkout from "./component/user/checkout/checkout";
 import Orders from "./component/user/orders/orders";
 import OrderDetail from "./component/user/orders/orderDetail";
 import { NotFound } from "./component/pagenotfound/notfound";
+import AdminUserView from "./component/admin/user/userView";
+import AdminHeader from "./component/admin/adminHeader";
+import AdminProductView from "./component/admin/product/product";
+import AdminDashboardView from "./component/admin/dashboard/dashboard";
+import AdminProductCategoryView from "./component/admin/product/category";
+import AdminProductImagesView from "./component/admin/product/product_image";
+import AdminOrderView from "./component/admin/orders/order";
 
 function App() {
   const access = GetAccessToken();
@@ -43,6 +51,49 @@ function App() {
           />
           {access ? (
             <>
+              <Route
+                exact
+                path="admin/user"
+                element={<AdminHeader component={AdminUserView}></AdminHeader>}
+              />
+              <Route
+                exact
+                path="admin/product_category"
+                element={
+                  <AdminHeader
+                    component={AdminProductCategoryView}
+                  ></AdminHeader>
+                }
+              />
+              <Route
+                exact
+                path="admin/product_images"
+                element={
+                  <AdminHeader component={AdminProductImagesView}></AdminHeader>
+                }
+              />
+              <Route
+                exact
+                path="admin/orders"
+                element={<AdminHeader component={AdminOrderView}></AdminHeader>}
+              />
+              <Route
+                exact
+                path="admin/dashboard"
+                element={
+                  <AdminHeader
+                    title="Dashboard"
+                    component={AdminDashboardView}
+                  ></AdminHeader>
+                }
+              />
+              <Route
+                exact
+                path="admin/product"
+                element={
+                  <AdminHeader component={AdminProductView}></AdminHeader>
+                }
+              />
               <Route exact path="user/cart" element={<Cart></Cart>} />
               <Route
                 exact

@@ -1,6 +1,6 @@
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import React from "react";
 export function PendingToast(messgae) {
   const Toast = toast.loading(messgae, { newestOnTop: true, autoClose: 15000 });
   return Toast;
