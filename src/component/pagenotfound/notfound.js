@@ -7,6 +7,6 @@ export function NotFound() {
     return navigate("/user/login");
   }, []);
 
-  navigate("/user/login");
+  navigate("");
   return <div>Page not found</div>;
 }

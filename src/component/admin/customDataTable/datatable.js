@@ -155,10 +155,6 @@ export function CustomDataTable(props) {
             ...ColoumnToConvert[i],
             editable: "always",
             render: (rowData) =>
-              // console.log(
-              //   "🚀 ~ file: datatable.js ~ line 158 ~ getConvertedData ~ rowData",
-              //   rowData[ColoumnToConvert[i]["lookupField"]]
-              // ),
               ColoumnToConvert[i] && ColoumnToConvert[i]["lookupColumn"] ? (
                 rowData[ColoumnToConvert[i]["lookupColumn"]] &&
                 rowData[ColoumnToConvert[i]["lookupColumn"]].length > 0 ? (

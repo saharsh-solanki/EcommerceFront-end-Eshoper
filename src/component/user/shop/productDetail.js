@@ -88,7 +88,7 @@ export default function ProductDetail() {
                                 ? "carousel-item active"
                                 : "carousel-item "
                             }
-                            style={{ maxHeight: "300px", minHeight: "300px" }}
+                            // style={{ maxHeight: "300px", minHeight: "300px" }}
                           >
                             <img
                               class="w-100 h-100"

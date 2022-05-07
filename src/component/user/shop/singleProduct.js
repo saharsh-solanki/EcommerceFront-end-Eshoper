@@ -41,11 +41,11 @@ function rocketcss(t, o, e) {
       })
       .animate({ top: i.top + "px", left: i.left + "px" }, 1500),
     a.addClass("mover " + (e || "rocketPulseHole")),
-    setTimeout(function () {
+    setTimeout(function() {
       a.fadeOut(300);
     }, 1500),
     $(t).attr("class", "fa fa-check-circle mr-1"),
-    setTimeout(function () {
+    setTimeout(function() {
       $(t).attr("class", "fas fa-shopping-cart text-primary mr-1");
       $(".target-class-cart").removeClass("targetPulse");
       window.scrollTo(0, heightto);
@@ -151,7 +151,7 @@ export function SingleProduct(props) {
 
       <div
         className="card product-item border-0 mb-4"
-        style={{ maxHeight: "400px" }}
+        style={{ maxHeight: "500px" }}
       >
         <div className="  card-header product-img position-relative overflow-hidden bg-transparent border p-0">
           <img
