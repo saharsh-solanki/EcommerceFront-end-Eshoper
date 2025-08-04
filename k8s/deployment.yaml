@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshoper-app-deployment
+  labels:
+    app: eshoper-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eshoper-app
+  template:
+    metadata:
+      labels:
+        app: eshoper-app
+    spec:
+      containers:
+      - name: eshoper-app
+        image: eshoper-app:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Never
+
